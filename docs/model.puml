@@ -1,0 +1,42 @@
+@startuml
+
+hide abstract empty members
+
+
+abstract class int
+abstract class tuple
+
+
+class Token {
+    -{static}maximum: int = 90
+    +strikethrough: bool = False
+    __str__()
+}
+
+
+class Row {
+    -{static}cells: int = 9
+    -{static}tokens: int = 5
+    __init__()
+    __str__()
+}
+
+
+class Card {
+    -{static}rows: int = 3
+    +tokens_set: <i>set</i>
+    __init__()
+    __str__()
+}
+
+
+int <|--- Token
+tuple <|-- Row
+tuple <|-- Card
+
+Row o-- Token
+Card *-right- Row
+Card o-- Token
+
+
+@enduml
