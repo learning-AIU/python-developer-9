@@ -5,17 +5,17 @@ from loto.model.card import Token, Row, Card
 
 
 class TestToken:
-    Token._minimum = 1
-    Token._maximum = 90
+    Token.minimum = 1
+    Token.maximum = 90
 
     @mark.parametrize('number', [0, 1, -2, 34, 500])
     def test_is_int_within_range(self, number):
         obj = Token(number)
         assert isinstance(obj, int)
-        if number < obj._minimum:
-            assert obj == obj._minimum
-        elif number > obj._maximum:
-            assert obj == obj._maximum
+        if number < obj.minimum:
+            assert obj == obj.minimum
+        elif number > obj.maximum:
+            assert obj == obj.maximum
         else:
             assert obj == number
 
@@ -26,14 +26,14 @@ class TestToken:
     @mark.parametrize('number', [6, 78])
     def test_str_straight(self, number):
         obj = Token(number)
-        width = len(str(obj._maximum))
+        width = len(str(obj.maximum))
         expected = f'{number:>{width}}'
         assert obj.__str__() == expected
 
     def test_str_strike(self):
         obj = Token()
         obj.strike = True
-        width = len(str(obj._maximum))
+        width = len(str(obj.maximum))
         expected = '-'*width
         assert obj.__str__() == expected
 
@@ -47,8 +47,8 @@ test_row_numbers = (
 )
 
 class TestRow:
-    Row._cells = 9
-    Row._tokens = 5
+    Row.cells = 9
+    Row.tokens = 5
 
     @mark.parametrize('numbers', test_row_numbers[:3])
     def test_init(self, numbers):
@@ -56,11 +56,11 @@ class TestRow:
         try:
             row = Row(*tokens)
         except ValueError as e:
-            msg = 'number of Row constructor arguments must equal Row._tokens'
+            msg = 'number of Row constructor arguments must equal Row.tokens'
             assert str(e) == msg
         else:
             assert isinstance(row, tuple)
-            assert len(row) == Row._cells
+            assert len(row) == Row.cells
 
     @mark.parametrize('numbers', test_row_numbers[2:])
     def test_sorted_tokens(self, numbers):
@@ -69,42 +69,42 @@ class TestRow:
         result = [t for t in row if isinstance(t, Token)]
         assert result == sorted(tokens)
 
-    Token._minimum = 1
-    Token._maximum = 90
+    Token.minimum = 1
+    Token.maximum = 90
 
     @mark.parametrize('n', range(5))
     def test_str(self, n):
-        tokens = [Token() for _ in range(Row._tokens)]
+        tokens = [Token() for _ in range(Row.tokens)]
         row = Row(*tokens)
         pattern = compile(r'(?:[ \d]\d| {2}) ?')
         expected = pattern.findall(row.__str__())
-        assert len(expected) == Row._cells
+        assert len(expected) == Row.cells
 
 
 class TestCard:
-    Token._minimum = 1
-    Token._maximum = 90
+    Token.minimum = 1
+    Token.maximum = 90
 
-    Row._cells = 9
-    Row._tokens = 5
+    Row.cells = 9
+    Row.tokens = 5
 
-    Card._rows = 3
+    Card.rows = 3
 
     @mark.parametrize('rows', (test_row_numbers, test_row_numbers[2:]))
     def test_init(self, rows):
         try:
             card = Card(*rows)
         except ValueError as e:
-            msg = 'number of Card constructor arguments must equal Card._rows'
+            msg = 'number of Card constructor arguments must equal Card.rows'
             assert str(e) == msg
         else:
             assert isinstance(card, list)
-            assert len(card) == Card._rows
+            assert len(card) == Card.rows
 
     @mark.parametrize('n', range(5))
     def test_str(self, n):
         card = Card()
         pattern = compile(r'((?:(?:[ \d]\d| {2}) ?)+\n)')
         result = pattern.findall(card.__str__())
-        assert len(result) == Card._rows
+        assert len(result) == Card.rows
 

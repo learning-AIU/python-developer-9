@@ -10,18 +10,18 @@ class Token(int):
     """
     Бочонок лото генерируется как случайное число в заданном диапазоне включая границы. При передаче в конструктор аргумента, выходящего за границы диапазона, объект принимает значение ближайшей границы.
     """
-    _minimum: int = 1
-    _maximum: int = 90
-    width: int = len(str(_maximum))
+    minimum: int = 1
+    maximum: int = 90
+    width: int = len(str(maximum))
 
     def __new__(cls, number: int = None) -> Self:
         if number is None:
-            return super().__new__(cls, randint(cls._minimum, cls._maximum))
+            return super().__new__(cls, randint(cls.minimum, cls.maximum))
         else:
-            if number < cls._minimum:
-                return super().__new__(cls, cls._minimum)
-            elif number > cls._maximum:
-                return super().__new__(cls, cls._maximum)
+            if number < cls.minimum:
+                return super().__new__(cls, cls.minimum)
+            elif number > cls.maximum:
+                return super().__new__(cls, cls.maximum)
             else:
                 return super().__new__(cls, number)
 
@@ -39,16 +39,16 @@ class Row(tuple):
     """
     Строка карточки конструируется как кортеж экземпляров Token и None на основании переданных в конструктор чисел. Количество аргументов конструктора должно быть равно атрибуту _tokens.
     """
-    _cells: int = 9
-    _tokens: int = 5
+    cells: int = 9
+    tokens: int = 5
 
-    def __new__(cls, *args) -> Self:
-        if len(args) != cls._tokens:
-            raise ValueError('number of Row constructor arguments must equal Row._tokens')
+    def __new__(cls, *args: int | Token) -> Self:
+        if len(args) != cls.tokens:
+            raise ValueError('number of Row constructor arguments must equal Row.tokens')
         else:
             tokens: list[Token | None] = sorted(Token(n) for n in args)
-            for i in range(1, cls._cells - cls._tokens + 1):
-                tokens.insert(randrange(cls._tokens + i), None)
+            for i in range(1, cls.cells - cls.tokens + 1):
+                tokens.insert(randrange(cls.tokens + i), None)
             return super().__new__(cls, tokens)
 
     def __str__(self):
