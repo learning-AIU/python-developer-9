@@ -1,6 +1,7 @@
 from pytest import mark
+from re import compile
 
-from loto.model.card import Token
+from loto.model.card import Token, Row
 
 
 class TestToken:
@@ -35,4 +36,44 @@ class TestToken:
         width = len(str(obj._maximum))
         expected = '-'*width
         assert obj.__str__() == expected
+
+
+test_row_numbers = (
+    [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    [1, 2, 3],
+    [1, 23, 3, 45, 6],
+    [5, 3, 2, 4, 1],
+    [10, 50, 30, 40, 20]
+)
+
+class TestRow:
+    Row._cells = 9
+    Row._tokens = 5
+
+    @mark.parametrize('numbers', test_row_numbers[:3])
+    def test_init(self, numbers):
+        tokens = [Token(n) for n in numbers]
+        try:
+            row = Row(*tokens)
+        except ValueError as e:
+            msg = 'number of Row constructor arguments must equal Row._tokens'
+            assert str(e) == msg
+        else:
+            assert isinstance(row, tuple)
+            assert len(row) == Row._cells
+
+    @mark.parametrize('numbers', test_row_numbers[2:])
+    def test_sorted_tokens(self, numbers):
+        tokens = [Token(n) for n in numbers]
+        row = Row(*tokens)
+        result = [t for t in row if isinstance(t, Token)]
+        assert result == sorted(tokens)
+
+    @mark.parametrize('numbers', test_row_numbers[2:])
+    def test_str(self, numbers):
+        tokens = [Token(n) for n in numbers]
+        row = Row(*tokens)
+        pattern = compile(r'([ \d]\d| {2}) ?')
+        expected = pattern.findall(row.__str__())
+        assert len(expected) == Row._cells
 
