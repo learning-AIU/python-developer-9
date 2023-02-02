@@ -20,7 +20,7 @@ class Token {
 class Row {
     -{static}cells: <i>int</i> = 9
     -{static}tokens: <i>int</i> = 5
-    __init__()
+    __new__()
     __str__()
 }
 
