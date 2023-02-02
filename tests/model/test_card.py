@@ -80,3 +80,31 @@ class TestRow:
         expected = pattern.findall(row.__str__())
         assert len(expected) == Row._cells
 
+
+class TestCard:
+    Token._minimum = 1
+    Token._maximum = 90
+
+    Row._cells = 9
+    Row._tokens = 5
+
+    Card._rows = 3
+
+    @mark.parametrize('rows', (test_row_numbers, test_row_numbers[2:]))
+    def test_init(self, rows):
+        try:
+            card = Card(*rows)
+        except ValueError as e:
+            msg = 'number of Card constructor arguments must equal Card._rows'
+            assert str(e) == msg
+        else:
+            assert isinstance(card, list)
+            assert len(card) == Card._rows
+
+    @mark.parametrize('n', range(5))
+    def test_str(self, n):
+        card = Card()
+        pattern = compile(r'((?:(?:[ \d]\d| {2}) ?)+\n)')
+        result = pattern.findall(card.__str__())
+        assert len(result) == Card._rows
+
