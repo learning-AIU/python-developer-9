@@ -2,7 +2,7 @@
 Игровые элементы.
 """
 
-from random import randint
+from random import randint, randrange
 from typing import Self
 
 
@@ -12,6 +12,7 @@ class Token(int):
     """
     _minimum: int = 1
     _maximum: int = 90
+    width: int = len(str(_maximum))
 
     def __new__(cls, number: int = None) -> Self:
         if number is None:
@@ -28,9 +29,31 @@ class Token(int):
         self.strike: bool = False
 
     def __str__(self):
-        width = len(str(self._maximum))
         if self.strike:
-            return '-'*width
+            return '-'*self.width
         else:
-            return f'{self:>{width}}'
+            return f'{self:>{self.width}}'
+
+
+class Row(tuple):
+    """
+    Строка карточки конструируется как кортеж экземпляров Token и None на основании переданных в конструктор чисел. Количество аргументов конструктора должно быть равно атрибуту _tokens.
+    """
+    _cells: int = 9
+    _tokens: int = 5
+
+    def __new__(cls, *args) -> Self:
+        if len(args) != cls._tokens:
+            raise ValueError('number of Row constructor arguments must equal Row._tokens')
+        else:
+            tokens: list[Token | None] = sorted(Token(n) for n in args)
+            for i in range(1, cls._cells - cls._tokens + 1):
+                tokens.insert(randrange(cls._tokens + i), None)
+            return super().__new__(cls, tokens)
+
+    def __str__(self):
+        return ' '.join(
+            ' '*Token.width if elem is None else str(elem)
+            for elem in self
+        )
 
