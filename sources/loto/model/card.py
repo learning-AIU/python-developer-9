@@ -2,9 +2,13 @@
 Игровые элементы.
 """
 
+# импорт из модулей/пакетов стандартной библиотеки
 from collections.abc import Iterable
 from random import randint, randrange, shuffle
 from typing import Self
+
+# импорт модулей/пакетов проекта
+from loto.model import errors
 
 
 class Token(int):
@@ -45,7 +49,7 @@ class Row(tuple):
 
     def __new__(cls, *args: int) -> Self:
         if len(args) != cls.tokens:
-            raise ValueError('number of Row constructor arguments must equal Row.tokens')
+            raise errors.RowArgsError
         else:
             tokens: list[Token | None] = sorted(Token(n) for n in args)
             for i in range(1, cls.cells - cls.tokens + 1):
@@ -71,7 +75,7 @@ class Card(list):
         shuffle(numbers)
         if args:
             if len(args) != self.rows:
-                raise ValueError('number of Card constructor arguments must equal Card.rows')
+                raise errors.CardArgsError
             rows = [Row(*arg) for arg in args]
         else:
             rows = [
@@ -85,6 +89,13 @@ class Card(list):
             self.append(row)
         self.width = Row.cells*(Token.width + 1) - 1
 
+    def __getitem__(self, index: int) -> Token | None:
+        if isinstance(index, int):
+            i, j = divmod(index, Row.cells)
+            return super().__getitem__(i)[j]
+        else:
+            raise TypeError(f'Card indices must be integers, not {index.__class__.__name__}')
+
     def __str__(self):
         h_line = '-'*self.width
         return '\n'.join([
@@ -92,4 +103,11 @@ class Card(list):
             *(str(r) for r in self),
             h_line
         ])
+
+    def strike_token(self, token: Token) -> None:
+        """"""
+        i = [t for r in self for t in r].index(token)
+        card_token = self[i]
+        if card_token is not None:
+            card_token.strike = True
 

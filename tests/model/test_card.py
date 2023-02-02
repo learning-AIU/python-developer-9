@@ -2,6 +2,7 @@ from pytest import mark
 from re import compile
 
 from loto.model.card import Token, Row, Card
+from loto.model.errors import RowArgsError, CardArgsError
 
 
 class TestToken:
@@ -55,7 +56,7 @@ class TestRow:
         tokens = [Token(n) for n in numbers]
         try:
             row = Row(*tokens)
-        except ValueError as e:
+        except RowArgsError as e:
             msg = 'number of Row constructor arguments must equal Row.tokens'
             assert str(e) == msg
         else:
@@ -84,18 +85,19 @@ class TestRow:
 class TestCard:
     Token.minimum = 1
     Token.maximum = 90
-
     Row.cells = 9
     Row.tokens = 5
-
     Card.rows = 3
 
     @mark.parametrize('rows', (test_row_numbers, test_row_numbers[2:]))
     def test_init(self, rows):
         try:
             card = Card(*rows)
-        except ValueError as e:
+        except CardArgsError as e:
             msg = 'number of Card constructor arguments must equal Card.rows'
+            assert str(e) == msg
+        except RowArgsError as e:
+            msg = 'number of Row constructor arguments must equal Row.tokens'
             assert str(e) == msg
         else:
             assert isinstance(card, list)
