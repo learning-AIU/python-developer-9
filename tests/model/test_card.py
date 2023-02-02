@@ -1,7 +1,7 @@
 from pytest import mark
 from re import compile
 
-from loto.model.card import Token, Row
+from loto.model.card import Token, Row, Card
 
 
 class TestToken:
@@ -69,11 +69,14 @@ class TestRow:
         result = [t for t in row if isinstance(t, Token)]
         assert result == sorted(tokens)
 
-    @mark.parametrize('numbers', test_row_numbers[2:])
-    def test_str(self, numbers):
-        tokens = [Token(n) for n in numbers]
+    Token._minimum = 1
+    Token._maximum = 90
+
+    @mark.parametrize('n', range(5))
+    def test_str(self, n):
+        tokens = [Token() for _ in range(Row._tokens)]
         row = Row(*tokens)
-        pattern = compile(r'([ \d]\d| {2}) ?')
+        pattern = compile(r'(?:[ \d]\d| {2}) ?')
         expected = pattern.findall(row.__str__())
         assert len(expected) == Row._cells
 
