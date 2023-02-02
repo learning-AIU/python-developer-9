@@ -2,7 +2,8 @@
 Игровые элементы.
 """
 
-from random import randint, randrange
+from collections.abc import Iterable
+from random import randint, randrange, shuffle
 from typing import Self
 
 
@@ -56,4 +57,39 @@ class Row(tuple):
             ' '*Token.width if elem is None else str(elem)
             for elem in self
         )
+
+
+class Card(list):
+    """
+    Карточка состоит из сгенерированных экземпляров Row. В конструктор Row передаётся необходимое количество уникальных экземпляров Token.
+    """
+    rows: int = 3
+
+    def __init__(self, *args: Iterable[int | Token]):
+        super().__init__()
+        self.numbers = list(range(Token.minimum, Token.maximum + 1))
+        shuffle(self.numbers)
+        if args:
+            if len(args) != self.rows:
+                raise ValueError('number of Card constructor arguments must equal Card.rows')
+            rows = [Row(*arg) for arg in args]
+        else:
+            rows = [
+                Row(*[
+                    self.numbers.pop()
+                    for _ in range(Row.tokens)
+                ])
+                for _ in range(self.rows)
+            ]
+        for row in rows:
+            self.append(row)
+        self.width = Row.cells*(Token.width + 1) - 1
+
+    def __str__(self):
+        h_line = '-'*self.width
+        return '\n'.join([
+            h_line,
+            *(str(r) for r in self),
+            h_line
+        ])
 
