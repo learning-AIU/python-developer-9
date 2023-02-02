@@ -5,11 +5,12 @@ hide abstract empty members
 
 abstract class int
 abstract class tuple
+abstract class list
 
 
 class Token {
-    -{static}minimum: <i>int</i> = 1
-    -{static}maximum: <i>int</i> = 90
+    +{static}minimum: <i>int</i> = 1
+    +{static}maximum: <i>int</i> = 90
     +strike: <i>bool</i> = False
     __new__()
     __init__()
@@ -18,15 +19,15 @@ class Token {
 
 
 class Row {
-    -{static}cells: <i>int</i> = 9
-    -{static}tokens: <i>int</i> = 5
+    +{static}cells: <i>int</i> = 9
+    +{static}tokens: <i>int</i> = 5
     __new__()
     __str__()
 }
 
 
 class Card {
-    -{static}rows: <i>int</i> = 3
+    +{static}rows: <i>int</i> = 3
     +tokens_set: <i>set</i>
     __init__()
     __str__()
@@ -35,7 +36,7 @@ class Card {
 
 int <|--- Token
 tuple <|-- Row
-tuple <|-- Card
+list <|-- Card
 
 Row o-- Token
 Card *-right- Row
