@@ -43,7 +43,7 @@ class Row(tuple):
     cells: int = 9
     tokens: int = 5
 
-    def __new__(cls, *args: int | Token) -> Self:
+    def __new__(cls, *args: int) -> Self:
         if len(args) != cls.tokens:
             raise ValueError('number of Row constructor arguments must equal Row.tokens')
         else:
@@ -65,10 +65,10 @@ class Card(list):
     """
     rows: int = 3
 
-    def __init__(self, *args: Iterable[int | Token]):
+    def __init__(self, *args: Iterable[int]):
         super().__init__()
-        self.numbers = list(range(Token.minimum, Token.maximum + 1))
-        shuffle(self.numbers)
+        numbers = list(range(Token.minimum, Token.maximum + 1))
+        shuffle(numbers)
         if args:
             if len(args) != self.rows:
                 raise ValueError('number of Card constructor arguments must equal Card.rows')
@@ -76,7 +76,7 @@ class Card(list):
         else:
             rows = [
                 Row(*[
-                    self.numbers.pop()
+                    numbers.pop()
                     for _ in range(Row.tokens)
                 ])
                 for _ in range(self.rows)

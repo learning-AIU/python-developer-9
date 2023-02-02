@@ -101,7 +101,13 @@ class TestCard:
             assert isinstance(card, list)
             assert len(card) == Card.rows
 
-    @mark.parametrize('n', range(5))
+    @mark.parametrize('n', range(10))
+    def test_unique(self, n):
+        card = Card()
+        result = {t for r in card for t in r} - {None}
+        assert len(result) == Row.tokens * Card.rows
+
+    @mark.parametrize('n', range(3))
     def test_str(self, n):
         card = Card()
         pattern = compile(r'((?:(?:[ \d]\d| {2}) ?)+\n)')

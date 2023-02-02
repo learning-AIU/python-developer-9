@@ -1,5 +1,7 @@
 @startuml
 
+!theme monokai from ..\data
+
 hide abstract empty members
 
 
@@ -28,7 +30,6 @@ class Row {
 
 class Card {
     +{static}rows: <i>int</i> = 3
-    +tokens_set: <i>set</i>
     __init__()
     __str__()
 }

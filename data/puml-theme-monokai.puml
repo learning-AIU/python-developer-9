@@ -1,0 +1,227 @@
+''
+'' A Monokai Pro style from PyCharm
+''
+'' Original Author: https://github.com/GennDALF
+'' https://github.com/...
+''
+
+!if (%not(%variable_exists("$FONT_NAME")))
+!$FONT_NAME = "Space Mono"
+!endif
+
+!if (%not(%variable_exists("$FONT_SIZE")))
+!$FONT_SIZE = 15
+!endif
+
+!$ACCENT = "ff6078"
+!$ACCENT_DARK = "9d332d"
+'' skinparam stereotypeCBackgroundColor $ACCENT
+
+!$PRIMARY_FONT = "fcfcfa"
+!$SECONDARY_FONT = "fcfcfa"
+
+!$ARROW = "afb1b3"
+!$LIGHT_ARROW = "fcfcfa"
+!$DARK_ARROW = "000"
+!$ARROW_FONT = "b7b6b6"
+
+!$BORDER = "afb1b3"
+!$LIGHT_BORDER = "fcfcfa"
+!$DARK_BORDER = "221f22"
+
+!$BOX_BG = "403e41"
+!$LIGHT_BOX_BG = "c5c5c4"
+!$DARK_BOX_BG = "221f22"
+
+
+skinparam backgroundColor 2d2a2e
+
+!procedure font_style()
+  fontColor $PRIMARY_FONT
+  fontName $FONT_NAME
+  fontSize $FONT_SIZE
+  stereotypeFontColor $SECONDARY_FONT
+  stereotypeFontSize $FONT_SIZE
+!endprocedure
+
+!procedure icon_style()
+  publicColor a8db6a
+  publicBackgroundColor a8db6a
+  privateColor be3c2d
+  privateBackgroundColor be3c2d
+  protectedColor ffd866
+  protectedBackgroundColor ffd866
+  packageColor 60c0cb
+  packageBackgroundColor 60c0cb
+!endprocedure
+
+!procedure basic_style()
+  backgroundColor $BOX_BG
+  borderColor $BORDER
+  borderThickness 1
+!endprocedure
+
+!procedure light_style()
+  backgroundColor $LIGHT_BOX_BG
+  borderColor $LIGHT_BORDER
+!endprocedure
+
+!procedure accent_style()
+  backgroundColor $ACCENT
+  borderColor $ACCENT_DARK
+!endprocedure
+
+!procedure arrow_style()
+  arrowColor $ARROW
+  arrowFontName $FONT_NAME
+  arrowFontColor $ARROW_FONT
+  arrowFontSize $FONT_SIZE
+!endprocedure
+
+' Class diagrams
+
+skinparam circledCharacter {
+  radius 12
+  fontSize $FONT_SIZE
+  fontName $FONT_NAME
+}
+
+skinparam icon {
+  icon_style()
+}
+
+skinparam class {
+  basic_style()
+  font_style()
+  arrow_style()
+
+  attributeFontColor $SECONDARY_FONT
+  attributeFontSize $FONT_SIZE
+}
+
+' Sequence diagrams
+
+skinparam actor {
+  accent_style()
+  font_style()
+}
+
+skinparam participant {
+  basic_style()
+  font_style()
+}
+
+skinparam collections {
+  basic_style()
+  font_style()
+}
+
+skinparam SequenceBox{
+  light_style()
+  font_style()
+}
+
+' Component diagrams
+
+skinparam interface {
+  accent_style()
+  font_style()
+}
+
+skinparam component {
+  basic_style()
+  font_style()
+}
+
+skinparam node {
+  basic_style()
+  font_style()
+}
+
+skinparam database {
+  basic_style()
+  font_style()
+}
+
+skinparam queue {
+  basic_style()
+  font_style()
+}
+
+' Use Case diagrams
+
+skinparam usecase {
+  basic_style()
+  font_style()
+  arrow_style()
+}
+
+skinparam activity {
+  basic_style()
+  font_style()
+  arrow_style()
+}
+
+skinparam sequence {
+  font_style()
+  arrow_style()
+
+  lifeLineBorderColor $ACCENT
+  lifeLineBackgroundColor $LIGHT_BOX_BG
+}
+
+skinparam boundary {
+  accent_style()
+  font_style()
+}
+
+skinparam control {
+  accent_style()
+  font_style()
+}
+
+skinparam entity {
+  accent_style()
+  font_style()
+}
+
+' State diagrams
+
+skinparam state {
+  basic_style()
+  font_style()
+  arrow_style()
+  startColor $ACCENT
+  endColor $ACCENT_DARK
+}
+
+' Object diagrams
+
+skinparam object {
+  basic_style()
+  font_style()
+  arrow_style()
+}
+
+' Common
+
+skinparam note {
+  accent_style()
+  font_style()
+}
+
+skinparam cloud {
+  basic_style()
+  font_style()
+  arrow_style()
+}
+
+skinparam rectangle {
+  basic_style()
+  font_style()
+}
+
+skinparam storage {
+  basic_style()
+  font_style()
+}
