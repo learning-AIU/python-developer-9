@@ -1,8 +1,10 @@
+# импорт из модулей/пакетов стандартной библиотеки
 from pytest import mark
 from re import compile
 
+# импорт модулей/пакетов проекта
 from loto.model.card import Token, Row, Card
-from loto.model.errors import RowArgsError, CardArgsError
+from loto.utils.errors import RowArgsError, CardArgsError
 
 
 class TestToken:

@@ -2,13 +2,18 @@
 Игровые элементы.
 """
 
+__all__ = [
+    'Token',
+    'Card',
+]
+
 # импорт из модулей/пакетов стандартной библиотеки
 from collections.abc import Iterable
 from random import randint, randrange, shuffle
 from typing import Self
 
 # импорт модулей/пакетов проекта
-from loto.model import errors
+from loto import utils
 
 
 class Token(int):
@@ -49,7 +54,7 @@ class Row(tuple):
 
     def __new__(cls, *args: int) -> Self:
         if len(args) != cls.tokens:
-            raise errors.RowArgsError
+            raise utils.RowArgsError
         else:
             tokens: list[Token | None] = sorted(Token(n) for n in args)
             for i in range(1, cls.cells - cls.tokens + 1):
@@ -75,7 +80,7 @@ class Card(list):
         shuffle(numbers)
         if args:
             if len(args) != self.rows:
-                raise errors.CardArgsError
+                raise utils.CardArgsError
             rows = [Row(*arg) for arg in args]
         else:
             rows = [

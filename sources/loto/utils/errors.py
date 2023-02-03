@@ -2,6 +2,11 @@
 Исключения.
 """
 
+__all__ = [
+    'RowArgsError',
+    'CardArgsError',
+]
+
 
 class RowArgsError(Exception):
     message = 'number of Row constructor arguments must equal Row.tokens'
