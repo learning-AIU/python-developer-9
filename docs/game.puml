@@ -1,0 +1,55 @@
+@startuml
+
+!theme monokai from ..\data
+
+hide enum empty members
+
+
+enum GameMode {
+    PVP
+    PVB
+    BVB
+}
+enum DifficultyLvl {
+    EASY
+    HARD
+}
+
+
+abstract class Player {
+    +card: Card
+    +fail: <i>bool</i>
+}
+
+
+class Human {
+    +next() → <i>None</i>
+    +strike() → <i>None</i>
+}
+
+
+class Bot {
+    +difficulty: DifficultyLvl
+    +turn() →
+}
+
+
+class Game {
+    +mode: GameMode
+    +players: <i>list</i>[Player]
+    +purse: <i>set</i>[Token]
+    +start() → Player
+    -check_fail() → <i>bool</i>
+}
+
+
+Player <|-- Human
+Player <|-- Bot
+
+Bot o-- DifficultyLvl
+
+Game o-left- GameMode
+Game o-down- Player
+
+
+@enduml
