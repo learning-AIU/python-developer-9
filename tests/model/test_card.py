@@ -10,7 +10,7 @@ class TestToken:
     Token.maximum = 90
 
     @mark.parametrize('number', [0, 1, -2, 34, 500])
-    def test_is_int_within_range(self, number):
+    def test_is_int_within_range(self, number: int):
         obj = Token(number)
         assert isinstance(obj, int)
         if number < obj.minimum:
@@ -25,7 +25,7 @@ class TestToken:
         assert result == {Token(1)}
 
     @mark.parametrize('number', [6, 78])
-    def test_str_straight(self, number):
+    def test_str_straight(self, number: int):
         obj = Token(number)
         width = len(str(obj.maximum))
         expected = f'{number:>{width}}'
@@ -52,19 +52,18 @@ class TestRow:
     Row.tokens = 5
 
     @mark.parametrize('numbers', test_row_numbers[:3])
-    def test_init(self, numbers):
+    def test_init(self, numbers: list[int]):
         tokens = [Token(n) for n in numbers]
         try:
             row = Row(*tokens)
         except RowArgsError as e:
-            msg = 'number of Row constructor arguments must equal Row.tokens'
-            assert str(e) == msg
+            assert str(e) == RowArgsError.message
         else:
             assert isinstance(row, tuple)
             assert len(row) == Row.cells
 
     @mark.parametrize('numbers', test_row_numbers[2:])
-    def test_sorted_tokens(self, numbers):
+    def test_sorted_tokens(self, numbers: list[int]):
         tokens = [Token(n) for n in numbers]
         row = Row(*tokens)
         result = [t for t in row if isinstance(t, Token)]
@@ -94,11 +93,9 @@ class TestCard:
         try:
             card = Card(*rows)
         except CardArgsError as e:
-            msg = 'number of Card constructor arguments must equal Card.rows'
-            assert str(e) == msg
+            assert str(e) == CardArgsError.message
         except RowArgsError as e:
-            msg = 'number of Row constructor arguments must equal Row.tokens'
-            assert str(e) == msg
+            assert str(e) == RowArgsError.message
         else:
             assert isinstance(card, list)
             assert len(card) == Card.rows
