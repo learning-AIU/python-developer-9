@@ -25,7 +25,7 @@ class TestToken:
         assert result == {Token(1)}
 
     @mark.parametrize('number', [6, 78])
-    def test_str_straight(self, number: int):
+    def test_str_clean(self, number: int):
         obj = Token(number)
         width = len(str(obj.maximum))
         expected = f'{number:>{width}}'
@@ -104,7 +104,7 @@ class TestCard:
     def test_unique(self, n):
         card = Card()
         result = {t for r in card for t in r} - {None}
-        assert len(result) == Row.tokens * Card.rows
+        assert len(result) == Row.tokens*Card.rows
 
     test_card = Card()
     @mark.parametrize('index', range(-1, 30))
@@ -112,14 +112,23 @@ class TestCard:
         try:
             token = self.test_card[index]
         except IndexError:
-            assert index < 0 or index > Row.tokens * Card.rows
+            assert index < 0 or index >= Row.cells*Card.rows
         else:
             assert isinstance(token, Token) or token is None
 
     @mark.parametrize('n', range(3))
-    def test_str(self, n):
+    def test_str_clean(self, n):
         card = Card()
-        pattern = compile(r'((?:(?:[ \d]\d| {2}) ?)+\n)')
+        pattern = compile(r'(?=\s([ \d]\d)\s)')
         result = pattern.findall(card.__str__())
-        assert len(result) == Card.rows
+        assert len(result) == Row.tokens*Card.rows
+
+    def test_str_strike(self):
+        card = Card()
+        for i in range(Row.cells*Card.rows):
+            if card[i] is not None:
+                card[i].strike = True
+        pattern = compile(r'(?=\s(-{2})\s)')
+        result = pattern.findall(card.__str__())
+        assert len(result) == Row.tokens*Card.rows
 
