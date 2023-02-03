@@ -106,6 +106,16 @@ class TestCard:
         result = {t for r in card for t in r} - {None}
         assert len(result) == Row.tokens * Card.rows
 
+    test_card = Card()
+    @mark.parametrize('index', range(-1, 30))
+    def test_getitem(self, index: int):
+        try:
+            token = self.test_card[index]
+        except IndexError:
+            assert index < 0 or index > Row.tokens * Card.rows
+        else:
+            assert isinstance(token, Token) or token is None
+
     @mark.parametrize('n', range(3))
     def test_str(self, n):
         card = Card()
