@@ -8,6 +8,17 @@ hide abstract empty members
 abstract class int
 abstract class tuple
 abstract class list
+abstract class Exception
+
+
+class RowArgsError {
+    +{static}message
+    __init__()
+}
+class CardArgsError {
+    +{static}message
+    __init__()
+}
 
 
 class Token {
@@ -31,17 +42,28 @@ class Row {
 class Card {
     +{static}rows: <i>int</i> = 3
     __init__()
+    __getitem__()
     __str__()
+    +strike_token() → <i>None</i>
 }
 
 
+Exception <|--- RowArgsError
+Exception <|-- CardArgsError
+
 int <|--- Token
-tuple <|-- Row
+tuple <|--- Row
 list <|-- Card
 
-Row o-- Token
-Card *-right- Row
+Row o-left- Token
+Row .right.> RowArgsError
+
+Card *-- Row
 Card o-- Token
+Card .right.> CardArgsError
+
+CardArgsError <-down[hidden]- tuple
+int <-right[hidden]- tuple
 
 
 @enduml
