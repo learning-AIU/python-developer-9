@@ -3,6 +3,15 @@
 """
 
 
+class Controller:
+    """
+
+    """
+
+    def get_input(self) -> str:
+        """"""
+
+
 def main():
     """Инициализирует и запускает игру."""
 
