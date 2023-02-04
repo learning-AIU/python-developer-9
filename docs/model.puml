@@ -41,6 +41,8 @@ class Row {
 
 class Card {
     +{static}rows: <i>int</i> = 3
+    +{static}cells: <i>int</i>
+    +{static}tokens: <i>int</i>
     __init__()
     __getitem__()
     __str__()

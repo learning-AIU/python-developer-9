@@ -17,7 +17,7 @@
 !$ACCENT_DARK = "9d332d"
 '' skinparam stereotypeCBackgroundColor $ACCENT
 
-!$PRIMARY_FONT = "fcfcfa"
+!$PRIMARY_FONT = "afb1b3"
 !$SECONDARY_FONT = "fcfcfa"
 
 !$ARROW = "afb1b3"
@@ -64,6 +64,12 @@ skinparam backgroundColor 2d2a2e
 !procedure light_style()
   backgroundColor $LIGHT_BOX_BG
   borderColor $LIGHT_BORDER
+!endprocedure
+
+!procedure heavy_style()
+  backgroundColor transparent
+  borderColor $DARK_BORDER
+  borderThickness 3
 !endprocedure
 
 !procedure accent_style()
@@ -204,6 +210,11 @@ skinparam object {
 }
 
 ' Common
+
+skinparam frame {
+  heavy_style()
+  fontColor $PRIMARY_FONT
+}
 
 skinparam note {
   accent_style()

@@ -3,6 +3,7 @@
 !theme monokai from ..\data
 
 hide enum empty members
+hide class empty members
 
 
 enum GameMode {
@@ -19,18 +20,20 @@ enum DifficultyLvl {
 abstract class Player {
     +card: Card
     +fail: <i>bool</i>
+    +action() → <i>bool</i>
+    -next() → <i>bool</i>
+    -strike() → <i>bool</i>
 }
 
 
 class Human {
-    +next() → <i>None</i>
-    +strike() → <i>None</i>
+    +action() → <i>bool</i>
 }
 
 
 class Bot {
     +difficulty: DifficultyLvl
-    +turn() →
+    +action() → <i>bool</i>
 }
 
 
@@ -43,13 +46,30 @@ class Game {
 }
 
 
+frame " main  " {
+    class Controller {
+        {method}...
+        +get_input() → Answer
+        {method}...
+    }
+}
+
+
 Player <|-- Human
 Player <|-- Bot
+
+Human ...> Controller::get_input
 
 Bot o-- DifficultyLvl
 
 Game o-left- GameMode
 Game o-down- Player
+
+Game ..> Player
+
+
+DifficultyLvl -[hidden]- Controller
+Human -right[hidden]- Bot
 
 
 @enduml
