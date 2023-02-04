@@ -1,4 +1,5 @@
 # импорт из модулей/пакетов стандартной библиотеки
+from itertools import chain
 from pytest import mark
 from re import compile
 
@@ -102,11 +103,16 @@ class TestCard:
             assert isinstance(card, list)
             assert len(card) == Card.rows
 
+    def test_contains(self):
+        card = Card(*test_row_numbers[2:])
+        for n in chain(*test_row_numbers[2:]):
+            assert n in card
+
     @mark.parametrize('n', range(10))
     def test_unique(self, n):
         card = Card()
         result = {t for r in card for t in r} - {None}
-        assert len(result) == Row.tokens*Card.rows
+        assert len(result) == Card.tokens
 
     test_card = Card()
     @mark.parametrize('index', range(-1, 30))
@@ -114,16 +120,24 @@ class TestCard:
         try:
             token = self.test_card[index]
         except IndexError:
-            assert index < 0 or index >= Row.cells*Card.rows
+            assert index < 0 or index >= Card.cells
         else:
             assert isinstance(token, Token) or token is None
+
+    def test_str_bool(self):
+        card = Card()
+        for i in range(Row.cells*Card.rows):
+            if card[i] is not None:
+                assert bool(card) is False
+                card[i].strike = True
+        assert bool(card) is True
 
     @mark.parametrize('n', range(3))
     def test_str_clean(self, n):
         card = Card()
         pattern = compile(r'(?=\s([ \d]\d)\s)')
         result = pattern.findall(card.__str__())
-        assert len(result) == Row.tokens*Card.rows
+        assert len(result) == Card.tokens
 
     def test_str_strike(self):
         card = Card()
@@ -132,5 +146,5 @@ class TestCard:
                 card[i].strike = True
         pattern = compile(r'(?=\s(-{2})\s)')
         result = pattern.findall(card.__str__())
-        assert len(result) == Row.tokens*Card.rows
+        assert len(result) == Card.tokens
 

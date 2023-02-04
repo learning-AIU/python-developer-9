@@ -9,7 +9,9 @@ __all__ = [
 
 # импорт из модулей/пакетов стандартной библиотеки
 from collections.abc import Iterable
+from itertools import chain
 from random import randint, randrange, shuffle
+import re
 from typing import Self
 
 # импорт модулей/пакетов проекта
@@ -62,8 +64,9 @@ class Row(tuple):
             return super().__new__(cls, tokens)
 
     def __str__(self):
+        stub = ' '*Token.width
         return ' '.join(
-            ' '*Token.width if elem is None else str(elem)
+            str(elem) if elem is not None else stub
             for elem in self
         )
 
@@ -75,6 +78,7 @@ class Card(list):
     rows: int = 3
     cells: int = Row.cells * rows
     tokens: int = Row.tokens * rows
+    __pattern = re.compile(r'(?=\s(-{2})\s)')
 
     def __init__(self, *args: Iterable[int]):
         super().__init__()
@@ -96,12 +100,19 @@ class Card(list):
             self.append(row)
         self.width = Row.cells*(Token.width + 1) - 1
 
+    def __contains__(self, token: int):
+        return token in chain(*self)
+
     def __getitem__(self, index: int) -> Token | None:
         if isinstance(index, int):
             i, j = divmod(index, Row.cells)
             return super().__getitem__(i)[j]
         else:
             raise TypeError(f'Card indices must be integers, not {index.__class__.__name__}')
+
+    def __bool__(self):
+        strikes = self.__pattern.findall(str(self))
+        return len(strikes) == self.tokens
 
     def __str__(self):
         h_line = '-'*self.width
@@ -111,7 +122,7 @@ class Card(list):
             h_line
         ])
 
-    def strike_token(self, token: Token) -> None:
+    def strike_token(self, token: int) -> None:
         """"""
         i = [t for r in self for t in r].index(token)
         card_token = self[i]
