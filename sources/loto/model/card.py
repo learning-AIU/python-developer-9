@@ -73,6 +73,8 @@ class Card(list):
     Карточка состоит из сгенерированных экземпляров Row. В конструктор Row передаётся необходимое количество уникальных экземпляров Token.
     """
     rows: int = 3
+    cells: int = Row.cells * rows
+    tokens: int = Row.tokens * rows
 
     def __init__(self, *args: Iterable[int]):
         super().__init__()
