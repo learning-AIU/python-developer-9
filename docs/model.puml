@@ -43,8 +43,11 @@ class Card {
     +{static}rows: <i>int</i> = 3
     +{static}cells: <i>int</i>
     +{static}tokens: <i>int</i>
+    #{static}pattern: <i>re.Pattern</i>
     __init__()
+    __contains__()
     __getitem__()
+    __bool__()
     __str__()
     +strike_token() → <i>None</i>
 }
