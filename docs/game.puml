@@ -12,8 +12,8 @@ enum GameMode {
     BVB
 }
 enum DifficultyLvl {
-    EASY
-    HARD
+    EASY = 0.9
+    HARD = 1.0
 }
 
 
@@ -33,6 +33,7 @@ class Human {
 
 class Bot {
     +difficulty: DifficultyLvl
+    -actions: <i>list</i>[<i>bool</i>]
     +action() → <i>bool</i>
 }
 
