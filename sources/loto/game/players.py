@@ -2,8 +2,11 @@
 Участники игры.
 """
 
+# импорт из модулей/пакетов стандартной библиотеки
 from abc import ABC, abstractmethod
+from random import choice
 
+# импорт модулей/пакетов проекта
 from loto import main
 from loto import model
 from loto import utils
@@ -53,6 +56,30 @@ class Human(Player):
 
 class Bot(Player):
     """
-
+    Реализация сущности игрока-бота.
     """
+    def __init__(self,
+                 card: model.Card = None,
+                 *,
+                 lvl: utils.DifficultyLvl = utils.DifficultyLvl.EASY):
+        super().__init__(card)
+        self.difficulty = lvl
+        self._actions: list[bool] = [
+            True
+            for _ in range(int(self.difficulty*utils.SAMPLE_LENGTH))
+        ] + [
+            False
+            for _ in range(int((1-self.difficulty)*utils.SAMPLE_LENGTH))
+        ]
+
+
+    def action(self, token: int) -> bool:
+        """Выполняет действие игрока-бота в зависимости от уровня сложности и обрабатывает результат действия. Возвращает логическое значение, обозначающее завершение игры победой текущего игрока."""
+        ch = choice(self._actions)
+        if token in self.card:
+            action = (self._next, self._strike)[ch]
+        else:
+            action = (self._strike, self._next)[ch]
+        action(token)
+        return bool(self.card)
 

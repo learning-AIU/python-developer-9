@@ -34,6 +34,7 @@ class Human {
 class Bot {
     +difficulty: DifficultyLvl
     -actions: <i>list</i>[<i>bool</i>]
+    __init__()
     +action() → <i>bool</i>
 }
 
