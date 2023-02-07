@@ -42,9 +42,14 @@ class Bot {
 class Game {
     +mode: GameMode
     +players: <i>list</i>[Player]
-    +purse: <i>set</i>[Token]
-    +start() → Player
-    -check_fail() → <i>bool</i>
+    -purse: <i>set</i>[Token]
+    ..<i> purse.getter </i>..
+'    ready → <i>bool</i>
+    +get_token → Token
+    __
+'    +add_player() → <i>None</i>
+'    +start() → Player
+    +check_fail() → <i>None</i>
 }
 
 
@@ -66,8 +71,7 @@ Bot o-- DifficultyLvl
 
 Game o-left- GameMode
 Game o-down- Player
-
-Game ..> Player
+Game .down.> Player
 
 
 DifficultyLvl -[hidden]- Controller
