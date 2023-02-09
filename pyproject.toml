@@ -1,3 +1,6 @@
+[build-system]
+requires = ["multimethod>=1.1"]
+
 [tool.pytest.ini_options]
 pythonpath = "sources"
 addopts = [
