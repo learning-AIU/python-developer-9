@@ -2,6 +2,12 @@
 Участники игры.
 """
 
+__all__ = [
+    'Player',
+    'Human',
+    'Bot',
+]
+
 # импорт из модулей/пакетов стандартной библиотеки
 from abc import ABC, abstractmethod
 from random import choice

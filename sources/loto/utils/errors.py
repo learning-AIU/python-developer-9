@@ -3,8 +3,11 @@
 """
 
 __all__ = [
+    'CardError',
     'RowArgsError',
     'CardArgsError',
+    'GameError',
+    'GameInitError',
 ]
 
 
@@ -27,4 +30,6 @@ class GameError(Exception):
 
 
 class GameInitError(GameError):
-    pass
+    message: str = 'use explicit Player instances or GameMode instance as Game constructor arguments'
+    def __init__(self):
+        super().__init__(self.message)

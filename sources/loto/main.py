@@ -2,13 +2,16 @@
 Игра Лото.
 """
 
+from loto import utils
+
 
 class Controller:
     """
 
     """
 
-    def get_input(self) -> str:
+    @staticmethod
+    def get_input() -> utils.Answer:
         """"""
 
 
