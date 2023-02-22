@@ -1,5 +1,6 @@
 from pytest import fixture
 
+from loto.cli import View
 from loto.model.card import Token, Card
 
 
@@ -9,10 +10,12 @@ test_card = (
     (11, 12, 13, 14, 15),
 )
 
+
 @fixture
 def get_card_clean(request) -> Card:
     Token.minimum, Token.maximum = request.param
     return Card(*test_card)
+
 
 @fixture
 def get_card_one_token() -> Card:
@@ -27,4 +30,19 @@ def get_card_one_token() -> Card:
                 return card
 
 
+@fixture
+def mock_cli(request, monkeypatch):
+
+    def suppress_stdout(*args, **kwargs):
+        return None
+
+    for attr in dir(View):
+        if attr.startswith('show'):
+            monkeypatch.setattr(View, attr, suppress_stdout)
+
+    def mock_get_players(*args, **kwargs) -> str:
+        return request.param
+
+    monkeypatch.setattr(View, 'get_players', mock_get_players)
+    return request.param
 
