@@ -2,21 +2,12 @@ from decimal import Decimal as dec
 from pytest import mark
 
 from loto.game.players import Human, Bot
-from loto.main import Controller
 from loto.model.card import Card
 from loto.utils.data import Answer, DifficultyLvl, SAMPLE_LENGTH
 
 
 
 class TestHuman:
-
-    @staticmethod
-    def mock_get_next() -> Answer:
-        return Answer.NO
-
-    @staticmethod
-    def mock_get_strike() -> Answer:
-        return Answer.YES
 
     def test_init(self):
         player = Human()
@@ -25,62 +16,37 @@ class TestHuman:
         assert player.fail is False
 
     @mark.parametrize('get_card_clean', [(1, 90)], indirect=True)
-    def test_action_next(self, monkeypatch, get_card_clean):
-        monkeypatch.setattr(
-            Controller,
-            'get_input',
-            self.mock_get_next
-        )
+    def test_action_next(self, get_card_clean):
         player = Human(get_card_clean)
-        win = player.action(100)
+        win = player.action(100, Answer.NO)
         assert player.fail is False
         assert win is False
 
     @mark.parametrize('get_card_clean', [(1, 90)], indirect=True)
-    def test_action_next_fail(self, monkeypatch, get_card_clean):
-        monkeypatch.setattr(
-            Controller,
-            'get_input',
-            self.mock_get_next
-        )
+    def test_action_next_fail(self, get_card_clean):
         player = Human(get_card_clean)
-        win = player.action(1)
+        win = player.action(1, Answer.NO)
         assert player.fail is True
         assert win is False
 
     @mark.parametrize('get_card_clean', [(1, 90)], indirect=True)
-    def test_action_strike(self, monkeypatch, get_card_clean):
-        monkeypatch.setattr(
-            Controller,
-            'get_input',
-            self.mock_get_strike
-        )
+    def test_action_strike(self, get_card_clean):
         player = Human(get_card_clean)
-        win = player.action(1)
+        win = player.action(1, Answer.YES)
         assert player.fail is False
         assert win is False
 
     @mark.parametrize('get_card_clean', [(1, 90)], indirect=True)
-    def test_action_strike_fail(self, monkeypatch, get_card_clean):
-        monkeypatch.setattr(
-            Controller,
-            'get_input',
-            self.mock_get_strike
-        )
+    def test_action_strike_fail(self, get_card_clean):
         player = Human(get_card_clean)
-        win = player.action(100)
+        win = player.action(100, Answer.YES)
         assert player.fail is True
         assert win is False
 
     @mark.parametrize('get_card_one_token', [(1, 90)], indirect=True)
-    def test_action_strike_win(self, monkeypatch, get_card_one_token):
-        monkeypatch.setattr(
-            Controller,
-            'get_input',
-            self.mock_get_strike
-        )
+    def test_action_strike_win(self, get_card_one_token):
         player = Human(get_card_one_token)
-        win = player.action(15)
+        win = player.action(15, Answer.YES)
         assert player.fail is False
         assert win is True
 

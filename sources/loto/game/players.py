@@ -13,7 +13,6 @@ from abc import ABC, abstractmethod
 from random import choice
 
 # импорт модулей/пакетов проекта
-from loto import main
 from loto import model
 from loto import utils
 
@@ -22,14 +21,17 @@ class Player(ABC):
     """
     Абстрактный базовый класс, определяющий порядок реализации сущностей игроков.
     """
+    number: int = 1
+
     def __init__(self, card: model.Card = None):
+        self.name: str = ''
         if card is None:
             card = model.Card()
         self.card: model.Card = card
         self.fail: bool = False
 
     @abstractmethod
-    def action(self, token: int) -> bool:
+    def action(self, token: int, answer: utils.Answer) -> bool:
         """Запускает выполнение действия игроком во время его хода."""
 
     def _next(self, token: int) -> None:
@@ -49,13 +51,17 @@ class Human(Player):
     """
     Реализация сущности игрока-человека.
     """
-    def action(self, token: int) -> bool:
+    def __init__(self, card: model.Card = None):
+        super().__init__(card)
+        self.name = f"{utils.INPUTS['human']} {self.number}".title()
+        self.__class__.number += 1
+
+    def action(self, token: int, answer: utils.Answer) -> bool:
         """Выполняет запрос к игроку-человеку о его выборе действия, выполняет выбранное действие и обрабатывает результат действия. Возвращает логическое значение, обозначающее завершение игры победой текущего игрока."""
-        ans = main.Controller.get_input()
-        if ans is utils.Answer.NO:
+        if answer is utils.Answer.NO:
             self._next(token)
             return False
-        elif ans is utils.Answer.YES:
+        elif answer is utils.Answer.YES:
             self._strike(token)
             return bool(self.card)
 
@@ -69,6 +75,8 @@ class Bot(Player):
                  *,
                  lvl: utils.DifficultyLvl = utils.DifficultyLvl.EASY):
         super().__init__(card)
+        self.name = f"{utils.INPUTS['bot']} {self.number}".title()
+        self.__class__.number += 1
         self.difficulty = lvl
         self._actions: list[bool] = [
             True
@@ -77,15 +85,17 @@ class Bot(Player):
             False
             for _ in range(int((1-self.difficulty)*utils.SAMPLE_LENGTH))
         ]
+        self.last_action: utils.Answer = None
 
-
-    def action(self, token: int) -> bool:
+    def action(self, token: int, answer=None) -> bool:
         """Выполняет действие игрока-бота в зависимости от уровня сложности и обрабатывает результат действия. Возвращает логическое значение, обозначающее завершение игры победой текущего игрока."""
         ch = choice(self._actions)
         if token in self.card:
             action = (self._next, self._strike)[ch]
+            self.last_action = (utils.Answer.NO, utils.Answer.YES)[ch]
         else:
             action = (self._strike, self._next)[ch]
+            self.last_action = (utils.Answer.YES, utils.Answer.NO)[ch]
         action(token)
         return bool(self.card)
 
