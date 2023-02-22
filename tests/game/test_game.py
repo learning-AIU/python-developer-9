@@ -3,7 +3,6 @@ from pytest import mark, xfail
 
 from loto.game.game import Game
 from loto.game.players import Human, Bot
-from loto.main import Controller
 from loto.model.card import Token
 from loto.utils.data import GameMode, Answer
 from loto.utils.errors import GameInitError
@@ -24,10 +23,6 @@ test_modes = (
 )
 
 class TestGame:
-
-    @staticmethod
-    def mock_get_next() -> Answer:
-        return Answer.NO
 
     @mark.parametrize('players', test_players)
     def test_init_players(self, players):
@@ -71,16 +66,11 @@ class TestGame:
         assert (mn, mx) == tokens_range
 
     @mark.parametrize('get_card_clean', [(1, 90)], indirect=True)
-    def test_check_fail(self, monkeypatch, get_card_clean):
-        monkeypatch.setattr(
-            Controller,
-            'get_input',
-            self.mock_get_next
-        )
+    def test_check_fail(self, get_card_clean):
         player1 = Human(get_card_clean)
         player2 = Human(get_card_clean)
         game = Game(player1, player2)
-        game.players[0].action(1)
+        game.players[0].action(1, Answer.NO)
         game.check_fail()
         assert player1 not in game.players
 

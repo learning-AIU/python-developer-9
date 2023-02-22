@@ -6,9 +6,8 @@ __all__ = [
     'Game',
 ]
 
-from random import choice, shuffle
-
 from multimethod import multimeta
+from random import choice, shuffle
 
 from loto import game
 from loto import model
@@ -60,14 +59,18 @@ class Game(metaclass=multimeta):
         tokens = [model.Token(i)
                   for i in range(model.Token.minimum, model.Token.maximum+1)]
         shuffle(tokens)
-        self._purse: set[model.Token] = set(tokens)
+        self._purse: list[model.Token] = tokens
 
     @property
-    def get_token(self) -> model.Token:
-        return self._purse.pop()
+    def get_token(self) -> model.Token | None:
+        try:
+            t = self._purse.pop()
+        except IndexError:
+            return None
+        else:
+            return t
 
-    def check_fail(self) -> None:
-        for player in iter(self.players):
-            if player.fail:
-                self.players.remove(player)
+    def check_fail(self) -> int:
+        self.players = [pl for pl in self.players if not pl.fail]
+        return len(self.players)
 
