@@ -1,5 +1,7 @@
+# импорт из модулей/пакетов стандартной библиотеки
 from pytest import fixture
 
+# импорт модулей/пакетов проекта
 from loto.cli import View
 from loto.model.card import Token, Card
 

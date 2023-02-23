@@ -2,10 +2,12 @@
 Представление для интерфейса командной строки.
 """
 
+# импорт из модулей/пакетов стандартной библиотеки
 from shutil import get_terminal_size
 from typing import Literal
 
-from loto import game
+# импорт модулей/пакетов проекта
+from loto import model
 from loto import utils
 
 
@@ -52,19 +54,19 @@ class View:
         self.show_line(f'Бочонок: {token}', level=2)
 
     @staticmethod
-    def show_card(player: game.Player):
+    def show_card(player: model.Player):
         print(f'\n{player.name:^{player.card.width}}')
         print(player.card)
 
     @staticmethod
-    def show_bot_action(bot: game.Bot):
+    def show_bot_action(bot: model.Bot):
         print(f'\n{utils.SYS_MARK}'
               f'{bot.name}'
               f'{utils.SYS_MARK}'
               f'\n{utils.PROMPT}'
               f'{utils.MESSAGES[bot.last_action.value]}')
 
-    def show_winner(self, player: game.Player):
+    def show_winner(self, player: model.Player):
         self.show_line(f'{player.name} победил!', level=3)
 
     def show_tie(self):

@@ -1,8 +1,10 @@
+# импорт из модулей/пакетов стандартной библиотеки
 from multimethod import DispatchError
 from pytest import mark, xfail
 
-from loto.game.game import Game
-from loto.game.players import Human, Bot
+# импорт модулей/пакетов проекта
+from loto.model.game import Game
+from loto.model.players import Human, Bot
 from loto.model.card import Token
 from loto.utils.data import GameMode, Answer
 from loto.utils.errors import GameInitError
@@ -21,6 +23,7 @@ test_modes = (
     GameMode.PVB,
     GameMode.BVB,
 )
+
 
 class TestGame:
 

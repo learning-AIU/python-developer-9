@@ -1,10 +1,11 @@
+# импорт из модулей/пакетов стандартной библиотеки
 from decimal import Decimal as dec
 from pytest import mark
 
-from loto.game.players import Human, Bot
+# импорт модулей/пакетов проекта
+from loto.model.players import Human, Bot
 from loto.model.card import Card
 from loto.utils.data import Answer, DifficultyLvl, SAMPLE_LENGTH
-
 
 
 class TestHuman:

@@ -6,10 +6,12 @@ __all__ = [
     'Game',
 ]
 
+# импорт из модулей/пакетов стандартной библиотеки
 from multimethod import multimeta
 from random import choice, shuffle
 
-from loto import game
+# импорт модулей/пакетов проекта
+from . import players
 from loto import model
 from loto import utils
 
@@ -23,32 +25,32 @@ class Game(metaclass=multimeta):
     players_number: int = 2
 
     def __init__(self,
-                 player1: game.Player,
-                 player2: game.Player,
-                 *players: game.Player):
-        self.players = list((player1, player2) + players)
+                 player1: players.Player,
+                 player2: players.Player,
+                 *players_: players.Player):
+        self.players = list((player1, player2) + players_)
         players_set = {type(pl) for pl in self.players}
-        if players_set == {game.Human}:
+        if players_set == {players.Human}:
             self.mode: utils.GameMode = utils.GameMode.PVP
-        elif players_set == {game.Human, game.Bot}:
+        elif players_set == {players.Human, players.Bot}:
             self.mode: utils.GameMode = utils.GameMode.PVB
-        elif players_set == {game.Bot}:
+        elif players_set == {players.Bot}:
             self.mode: utils.GameMode = utils.GameMode.BVB
         else:
             raise utils.GameInitError
         self.__post_init__()
 
     def __init__(self, mode: utils.GameMode):
-        self.players: list[game.Player]
+        self.players: list[players.Player]
         if mode is utils.GameMode.PVP:
-            self.players = [game.Human()
+            self.players = [players.Human()
                             for _ in range(self.players_number)]
         elif mode is utils.GameMode.PVB:
-            q = [game.Human(), game.Bot(lvl=self.difficulty)]
+            q = [players.Human(), players.Bot(lvl=self.difficulty)]
             self.players = q + [choice(q)
                                 for _ in range(self.players_number-2)]
         elif mode is utils.GameMode.BVB:
-            self.players = [game.Bot(lvl=self.difficulty)
+            self.players = [players.Bot(lvl=self.difficulty)
                             for _ in range(self.players_number)]
         else:
             raise utils.GameInitError

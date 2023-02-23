@@ -1,13 +1,15 @@
+# импорт из модулей/пакетов стандартной библиотеки
 from decimal import Decimal as dec
-from statistics import mean, pstdev, pvariance
-
 from pytest import mark
+from statistics import mean
 
+# импорт модулей/пакетов проекта
 from loto.cli import View
 from loto.controller import Controller
-from loto.game.players import Human, Bot
+from loto.model.players import Human, Bot
 from loto.model.card import Token
 from loto.utils.data import SAMPLE_LENGTH
+
 
 test_players = {
     'и_и': [Human, Human],

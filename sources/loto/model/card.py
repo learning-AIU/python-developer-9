@@ -12,7 +12,7 @@ __all__ = [
 from collections.abc import Iterable
 from itertools import chain
 from random import randint, randrange, shuffle
-import re
+from re import compile
 from typing import Self
 
 # импорт модулей/пакетов проекта
@@ -79,7 +79,7 @@ class Card(list):
     rows: int = 3
     cells: int = Row.cells * rows
     tokens: int = Row.tokens * rows
-    __pattern = re.compile(r'(?=\s(-{2})\s)')
+    __pattern = compile(r'(?=\s(-{2})\s)')
 
     def __init__(self, *args: Iterable[int]):
         super().__init__()

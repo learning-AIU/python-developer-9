@@ -2,6 +2,7 @@
 Игра Лото.
 """
 
+# импорт модулей/пакетов проекта
 from loto import cli
 from loto import controller
 from loto import utils

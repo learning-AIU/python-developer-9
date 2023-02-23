@@ -57,6 +57,7 @@ test_row_numbers = (
     [10, 50, 30, 40, 20]
 )
 
+
 class TestRow:
     Row.cells = 9
     Row.tokens = 5
