@@ -77,10 +77,12 @@ class Bot(Player):
         super().__init__(card)
         self.name = f"{utils.INPUTS['bot']} {self.number}".title()
         self.__class__.number += 1
+        # из этого списка флагов бот в дальнейшем будет выбирать один для верного/неверного действия — пропорция количества элементов True и False определяется значениями элементов перечислителя DifficultyLvl и означает вероятность ошибки бота
         self._actions: list[bool] = [
             True
             for _ in range(int(lvl*utils.SAMPLE_LENGTH))
         ] + [
+            # для высокого уровня сложности эта часть списка должна быть пустой — таким образом сложный бот никогда не будет ошибаться
             False
             for _ in range(int((1-lvl)*utils.SAMPLE_LENGTH))
         ]
@@ -90,16 +92,20 @@ class Bot(Player):
         """Выполняет действие игрока-бота в зависимости от уровня сложности и обрабатывает результат действия. Возвращает логическое значение, обозначающее завершение игры победой текущего игрока."""
         ch = choice(self._actions)
         if token in self.card:
+            # верное действие
             if ch:
                 action = self._strike
                 self.last_action = utils.Answer.YES
+            # неверное действие
             else:
                 action = self._next
                 self.last_action = utils.Answer.NO
         else:
+            # верное действие
             if ch:
                 action = self._next
                 self.last_action = utils.Answer.NO
+            # неверное действие
             else:
                 action = self._strike
                 self.last_action = utils.Answer.YES

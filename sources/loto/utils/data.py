@@ -16,6 +16,7 @@ __all__ = [
     'PROMPT',
     'INPUTS',
     'SEP',
+    'pat_striked',
     'pat_human',
     'pat_bot_easy',
     'pat_bot_hard',
@@ -71,6 +72,8 @@ INPUTS = {
 }
 
 SEP = '_'
+
+pat_striked = compile(r'(?=\s(-{2})\s)')
 
 pat_human = compile(
     rf"{INPUTS['human'][0]}|{INPUTS['human']}"

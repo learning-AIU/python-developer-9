@@ -28,6 +28,7 @@ class Game(metaclass=multimeta):
                  player1: players.Player,
                  player2: players.Player,
                  *players_: players.Player):
+        """Инициализирует экземпляр игры с помощью экземпляров игроков. Требуется два или более игрока."""
         self.players = list((player1, player2) + players_)
         players_set = {type(pl) for pl in self.players}
         if players_set == {players.Human}:
@@ -41,6 +42,7 @@ class Game(metaclass=multimeta):
         self.__post_init__()
 
     def __init__(self, mode: utils.GameMode):
+        """Инициализирует экземпляр игры с помощью экземпляра перечислителя GameMode используя значения по умолчанию."""
         self.players: list[players.Player]
         if mode is utils.GameMode.PVP:
             self.players = [players.Human()
@@ -65,6 +67,7 @@ class Game(metaclass=multimeta):
 
     @property
     def get_token(self) -> model.Token | None:
+        """Извлекает и удаляет очередной экземпляр токена из перемешанного списка. Возвращает токен или None, когда список становится пустым."""
         try:
             t = self._purse.pop()
         except IndexError:
@@ -73,6 +76,7 @@ class Game(metaclass=multimeta):
             return t
 
     def check_fail(self) -> int:
+        """Удаляет из списка проигравших игроков. Возвращает количество оставшихся игроков."""
         self.players = [pl for pl in self.players if not pl.fail]
         return len(self.players)
 

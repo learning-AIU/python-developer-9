@@ -12,7 +12,6 @@ __all__ = [
 from collections.abc import Iterable
 from itertools import chain
 from random import randint, randrange, shuffle
-from re import compile
 from typing import Self
 
 # импорт модулей/пакетов проекта
@@ -50,7 +49,7 @@ class Token(int):
 
 class Row(tuple):
     """
-    Строка карточки конструируется как кортеж экземпляров Token и None на основании переданных в конструктор чисел. Количество аргументов конструктора должно быть равно атрибуту _tokens.
+    Строка карточки конструируется как кортеж экземпляров Token и None на основании переданных в конструктор чисел. Количество аргументов конструктора должно быть равно атрибуту tokens.
     """
     cells: int = 9
     tokens: int = 5
@@ -79,7 +78,6 @@ class Card(list):
     rows: int = 3
     cells: int = Row.cells * rows
     tokens: int = Row.tokens * rows
-    __pattern = compile(r'(?=\s(-{2})\s)')
 
     def __init__(self, *args: Iterable[int]):
         super().__init__()
@@ -102,9 +100,11 @@ class Card(list):
         self.width = Row.cells*(Token.width + 1) - 1
 
     def __contains__(self, token: int):
+        """Возвращает True если токен находится в экземплярах Row, являющихся элементами текущего экземпляра Card."""
         return token in chain(*self)
 
     def __getitem__(self, index: int) -> Token | None:
+        """Возвращает токен используя сквозную индексацию по всем экземплярам Row, являющимся элементами текущего экземпляра Card."""
         if isinstance(index, int):
             i, j = divmod(index, Row.cells)
             return super().__getitem__(i)[j]
@@ -112,7 +112,8 @@ class Card(list):
             raise TypeError(f'Card indices must be integers, not {index.__class__.__name__}')
 
     def __bool__(self):
-        strikes = self.__pattern.findall(str(self))
+        """Возвращает True если все токены в карточке зачёркнуты."""
+        strikes = utils.pat_striked.findall(str(self))
         return len(strikes) == self.tokens
 
     def __str__(self):
@@ -124,7 +125,7 @@ class Card(list):
         ])
 
     def strike_token(self, token: int) -> None:
-        """"""
+        """Находит в карточке и зачёркивает переданный токен."""
         i = [t for r in self for t in r].index(token)
         card_token = self[i]
         if card_token is not None:
