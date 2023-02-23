@@ -2,28 +2,93 @@
 
 !theme monokai from ..\data
 
+
+skinparam package {
+    BorderThickness 2
+'    FontColor gray
+}
+
+
 hide abstract empty members
+hide enum empty members
+hide class empty members
 
 
 abstract class int
 abstract class tuple
 abstract class list
-abstract class Exception
+'abstract class Exception
 
 
-class RowArgsError {
-    +{static}message
+'class RowArgsError {
+'    +{static}message
+'    __init__()
+'}
+'class CardArgsError {
+'    +{static}message
+'    __init__()
+'}
+
+'together {
+    enum GameMode {
+        PVP
+        PVB
+        BVB
+    }
+    enum DifficultyLvl {
+        EASY = 0.97
+        HARD = 1.00
+    }
+    enum Answer {
+        YES
+        NO
+    }
+'}
+
+'frame "  model   " as m {
+abstract class Player {
+    +{static}number: <i>int</i> = 1
+    +name: <i>str</i>
+    +card: Card
+    +fail: <i>bool</i>
     __init__()
+    +action() → <i>bool</i>
+    -next() → <i>None</i>
+    -strike() → <i>None</i>
 }
-class CardArgsError {
-    +{static}message
+
+
+class Human {
     __init__()
+    +action(Token, Answer) → <i>bool</i>
+}
+
+
+class Bot {
+    -actions: <i>list</i>[<i>bool</i>]
+    +last_action: Answer
+    __init__()
+    +action() → <i>bool</i>
+}
+
+
+class Game {
+    +mode: GameMode
+    +players: <i>list</i>[Player]
+    -purse: <i>list</i>[Token]
+    ..<i> purse.getter </i>..
+    +get_token → Token
+    __
+    __init__(Player, Player, <i>tuple</i>[Player])
+    __init__(GameMode)
+    +check_fail() → <i>int</i>
 }
 
 
 class Token {
     +{static}minimum: <i>int</i> = 1
     +{static}maximum: <i>int</i> = 90
+    +{static}width: <i>int</i>
     +strike: <i>bool</i> = False
     __new__()
     __init__()
@@ -43,7 +108,7 @@ class Card {
     +{static}rows: <i>int</i> = 3
     +{static}cells: <i>int</i>
     +{static}tokens: <i>int</i>
-    #{static}pattern: <i>re.Pattern</i>
+    +width: <i>int</i>
     __init__()
     __contains__()
     __getitem__()
@@ -51,24 +116,73 @@ class Card {
     __str__()
     +strike_token() → <i>None</i>
 }
+'}
+
+frame "  controller   " as c {
+    class Controller {
+        +view: View
+        +game: Game
+        __init__()
+        +set_game()
+        +start_game()
+        +get_human_turn() → Answer
+    }
+}
 
 
-Exception <|--- RowArgsError
-Exception <|-- CardArgsError
+frame "  cli   " as v {
+    class View {
+        {method}...
+        +{static}get_turn() → <i>str</i>
+        {method}...
+    }
+}
+
+
+'Exception <|--- RowArgsError
+'Exception <|-- CardArgsError
 
 int <|--- Token
-tuple <|--- Row
+tuple <|-- Row
 list <|-- Card
 
-Row o-left- Token
-Row .right.> RowArgsError
+Row o-down- Token
+'Row .right.> RowArgsError
 
-Card *-- Row
+Card *-left- Row
 Card o-- Token
-Card .right.> CardArgsError
+'Card .right.> CardArgsError
 
-CardArgsError <-down[hidden]- tuple
-int <-right[hidden]- tuple
+'CardArgsError <-down[hidden]- tuple
+'int <-right[hidden]- tuple
+
+Player *-left- Card
+Player <|-- Human
+Player <|-- Bot
+
+Human <... Controller::get_human_turn
+Human::action <.left. Token
+
+Controller::get_human_turn .left.> View::get_turn
+View -right-o Controller
+
+Controller o-- Game
+
+'Bot o-right- DifficultyLvl
+
+Game o--- Player
+Game ...> Player
+
+
+GameMode -left[hidden]- DifficultyLvl
+Game -left[hidden]- GameMode
+int -right[hidden]- tuple
+tuple -right[hidden]- list
+Bot -down[hidden]- Controller
+Answer -left[hidden]- Bot
+'GameMode -down[hidden]- q1
+'q1 -down[hidden]- DifficultyLvl
+Human -right[hidden]- Bot
 
 
 @enduml

@@ -1,0 +1,66 @@
+@startuml
+
+!theme monokai from ..\data
+
+skinparam package {
+    BorderThickness 2
+    FontSize 20
+}
+skinparam frame {
+    BorderColor afb1b3
+    FontSize 16
+    FontStyle Bold
+}
+skinparam storage {
+    BackgroundColor transparent
+    BorderThickness 3
+    FontSize 16
+    FontStyle Bold
+}
+skinparam Arrow {
+    Thickness 2
+    Color afb1b3
+}
+skinparam note {
+    FontColor 000
+}
+
+
+package " model  " as model {
+    frame "  card" as card
+    frame "  players" as players
+    frame "  game" as game
+}
+package " utils  " as utils {
+    frame "  errors" as errors
+    storage " data " as data
+}
+frame "  controller" as controller
+frame "  cli" as cli
+frame "  main" as main
+
+note as n1
+    Используется всеми модулями
+end note
+
+
+main --> controller
+main --> cli
+
+controller -left-> game
+controller -right-> cli
+
+game --> players
+players --> card
+
+game --> errors
+card --> errors
+
+data -- n1
+
+
+data -right[hidden] errors
+errors -[hidden]- n1
+
+
+@enduml
