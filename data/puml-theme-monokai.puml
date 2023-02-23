@@ -9,8 +9,13 @@
 !$FONT_NAME = "Space Mono"
 !endif
 
+!if (%not(%variable_exists("$FONT_NAME_CYRILLIC")))
+!$FONT_NAME_CYRILLIC = "Noto Sans"
+!endif
+
 !if (%not(%variable_exists("$FONT_SIZE")))
 !$FONT_SIZE = 15
+!$FONT_SIZE_SMALLER = 13
 !endif
 
 !$ACCENT = "ff6078"
@@ -217,8 +222,11 @@ skinparam frame {
 }
 
 skinparam note {
-  accent_style()
-  font_style()
+  light_style()
+  fontName $FONT_NAME_CYRILLIC
+  fontSize $FONT_SIZE_SMALLER
+  fontStyle Italic
+  fontColor $DARK_BOX_BG
 }
 
 skinparam cloud {
