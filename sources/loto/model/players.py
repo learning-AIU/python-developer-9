@@ -77,25 +77,32 @@ class Bot(Player):
         super().__init__(card)
         self.name = f"{utils.INPUTS['bot']} {self.number}".title()
         self.__class__.number += 1
-        self.difficulty = lvl
         self._actions: list[bool] = [
             True
-            for _ in range(int(self.difficulty*utils.SAMPLE_LENGTH))
+            for _ in range(int(lvl*utils.SAMPLE_LENGTH))
         ] + [
             False
-            for _ in range(int((1-self.difficulty)*utils.SAMPLE_LENGTH))
+            for _ in range(int((1-lvl)*utils.SAMPLE_LENGTH))
         ]
-        self.last_action: utils.Answer = None
+        self.last_action: utils.Answer | None = None
 
     def action(self, token: int, answer=None) -> bool:
         """Выполняет действие игрока-бота в зависимости от уровня сложности и обрабатывает результат действия. Возвращает логическое значение, обозначающее завершение игры победой текущего игрока."""
         ch = choice(self._actions)
         if token in self.card:
-            action = (self._next, self._strike)[ch]
-            self.last_action = (utils.Answer.NO, utils.Answer.YES)[ch]
+            if ch:
+                action = self._strike
+                self.last_action = utils.Answer.YES
+            else:
+                action = self._next
+                self.last_action = utils.Answer.NO
         else:
-            action = (self._strike, self._next)[ch]
-            self.last_action = (utils.Answer.YES, utils.Answer.NO)[ch]
+            if ch:
+                action = self._next
+                self.last_action = utils.Answer.NO
+            else:
+                action = self._strike
+                self.last_action = utils.Answer.YES
         action(token)
         return bool(self.card)
 

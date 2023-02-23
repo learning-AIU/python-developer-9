@@ -59,9 +59,9 @@ class TestBot:
         assert type(player.card) is Card
         assert bool(player.card) is False
         assert player.fail is False
-        assert player._actions.count(True) == SAMPLE_LENGTH*DifficultyLvl.EASY
+        assert player._actions.count(True) == SAMPLE_LENGTH * DifficultyLvl.EASY
         player = Bot(lvl=DifficultyLvl.HARD)
-        assert player._actions.count(True) == SAMPLE_LENGTH*DifficultyLvl.HARD
+        assert player._actions.count(True) == SAMPLE_LENGTH * DifficultyLvl.HARD
 
     @mark.parametrize('get_card_clean', [(1, 90)], indirect=True)
     def test_action_easy(self, get_card_clean):
@@ -76,7 +76,7 @@ class TestBot:
             results += [player.fail]
         correct_actions = results.count(False)
         # стандартное отклонение random.choice() > 1, поэтому разброс значений около мат.ожидания будет выше — отсюда поправка 0.97
-        assert correct_actions >= SAMPLE_LENGTH*DifficultyLvl.EASY*dec('0.97')
+        assert correct_actions >= SAMPLE_LENGTH * DifficultyLvl.EASY*dec('0.97')
 
     @mark.parametrize('get_card_clean', [(1, 90)], indirect=True)
     def test_action_hard(self, get_card_clean):
